@@ -1,0 +1,60 @@
+#!/bin/sh
+
+basedir="/home/USER_HERE/DIRECTORY_HERE/" # you can run "pwd" in the directory with the executable/binary to get this
+runcmd="RUN_COMMAND_HERE" # java -jar blah.jar, ./blah, etc.
+scriptname="SCRIPT_NAME_HERE" # how you want to call this script ("kirby start", "mcserver start", etc.)
+# now rename this file to whatever you set scriptname to be, run chmod +x on the file, and move it to /bin
+
+# DO NOT TOUCH ANYTHING BELOW THIS
+
+session="`basename \"$basedir\"`"
+
+start() {
+    tmux new-session -d -s $session
+    echo "Starting $session"
+    tmux send-keys -t $session "cd $basedir && $runcmd" C-m
+}
+
+stop() {
+    tmux send-keys -t $session C-c
+    echo "Stopping $session"
+    until [ -f /tmp/X$session ]; do
+        tmux send-keys -t $session "touch /tmp/X$session" C-m
+        sleep 1
+    done
+    rm /tmp/X$session
+    echo "Killing $session"
+    tmux kill-session -t $session
+}
+
+restart() {
+    tmux send-keys -t $session C-c
+    echo "Stopping $session"
+    until [ -f /tmp/X$session ]; do
+        tmux send-keys -t $session "touch /tmp/X$session" C-m
+        sleep 1
+    done
+    rm /tmp/X$session
+    echo "Killing old and starting new $session"
+    tmux rename-session -t $session $session"old"
+    start
+    tmux kill-session -t $session"old"
+}
+
+case "$1" in
+start)
+    start
+;;
+stop)
+    stop
+;;
+a)
+    tmux attach -t $session
+;;
+restart)
+    restart
+;;
+*)
+echo "Usage: $scriptname (start|stop|restart|a)"
+;;
+esac
