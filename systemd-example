@@ -5,8 +5,7 @@ After=postgresql@12-main.service nginx.service
 Type=simple
 Restart=always
 RestartSec=3s
-Environment="ARG1=-d"
-Environment="ARG2=-r"
+User=ubuntu
 WorkingDirectory=/home/ubuntu/kirby
 ExecStart=/home/ubuntu/kirby/kirby $ARG1 $ARG2
 [Install]

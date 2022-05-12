@@ -1,7 +1,7 @@
 #!/bin/sh
 
 basedir="/home/USER_HERE/DIRECTORY_HERE/" # you can run "pwd" in the directory with the executable/binary to get this
-runcmd="RUN_COMMAND_HERE" # java -jar blah.jar, ./blah, etc.
+runcmd="RUN_COMMAND_HERE" # java -jar blah.jar, go run ., ./blah, etc.
 scriptname="SCRIPT_NAME_HERE" # how you want to call this script ("kirby start", "mcserver start", etc.)
 # now rename this file to whatever you set scriptname to be, run chmod +x on the file, and move it to /bin
 
